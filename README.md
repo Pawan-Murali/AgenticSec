@@ -40,16 +40,17 @@ python agentic_reviewer.py target_file.py
 
 
 🏗️ Architecture
-
-Curious how it works under the hood? Here is the data flow:
-
-flowchart TD
-    
+Here is the data flow:
+```mermaid
     A["Target Python Script"] --> B["Local CLI Ingestion (argparse)"]
     B --> C["Gemini API (google-genai)"]
     C --> D["Structured JSON Analysis"]
+    
     D --> E{"Severity Assessment"}
+    
     E -->|"Severity: Low / Medium"| F["Report Warnings & Exit 0"]
     E -->|"Severity: High / Critical"| G["Trigger Build Breaker (Exit 1)"]
+    
     G --> H["Output Remediation Code Patch"]
     F --> I["Pipeline Passes"]
+```
