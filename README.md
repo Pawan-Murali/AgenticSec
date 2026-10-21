@@ -12,7 +12,7 @@ Lightweight: No heavy infrastructure or containers, just Python and the Gemini A
 
 ℹ️ Overview
 
-AgenticSec is a fast, AI-powered security scanner designed to shift DevSecOps to the absolute left. Instead of waiting for a static vulnerability scan in the cloud, this tool acts as a senior AppSec engineer living right inside your terminal.
+AgenticSec is a fast, AI-powered security scanner that shifts DevSecOps as far left as possible. Instead of waiting for a static vulnerability scan in the cloud, this tool acts like a senior AppSec engineer living in your terminal.
 
 By analyzing local code files using Google's Gemini LLM, it catches Open Worldwide Application Security Project (OWASP) Top 10 vulnerabilities (like SQL injections and logic flaws) before they are even committed. It is designed to be frictionless for developers: if it breaks your build, it immediately hands you the exact code snippet needed to fix it.
 
@@ -37,11 +37,12 @@ $env:GEMINI_API_KEY="your_api_key_here"
 🚀 Usage
 Point the script at any vulnerable Python file on your machine to scan it and generate secure remediation code.
 python agentic_reviewer.py target_file.py
-
+Feel free to use the vulnerable file sample already provided
 
 🏗️ Architecture
 Here is the data flow:
 ```mermaid
+flowchart TD
     A["Target Python Script"] --> B["Local CLI Ingestion (argparse)"]
     B --> C["Gemini API (google-genai)"]
     C --> D["Structured JSON Analysis"]
