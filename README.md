@@ -14,12 +14,18 @@ Agentic Auto-Remediation: Reduces developer friction by generating context-aware
 
 🧠 Architecture Flow
 
-graph LR
-    A[Target Code] -->|Ingested via CLI| B(agentic_reviewer.py)
-    B -->|Code Diff + Prompt| C{Gemini API}
-    C -->|Strict JSON Output| D[Severity Parser]
-    D -->|Low/Medium| E[Warn & Pass]
-    D -->|High/Critical| F[sys.exit 1 + Remediation Code]
+flowchart TD
+    A["Target Python Script"] --> B["Local CLI Ingestion (argparse)"]
+    B --> C["Gemini API (google-genai)"]
+    C --> D["Structured JSON Analysis"]
+    
+    D --> E{"Severity Assessment"}
+    
+    E -->|"Severity: Low / Medium"| F["Report Warnings & Exit 0"]
+    E -->|"Severity: High / Critical"| G["Trigger Build Breaker (Exit 1)"]
+    
+    G --> H["Output Remediation Code Patch"]
+    F --> I["Pipeline Passes"]
 
 
 (Note: The above diagram renders natively in GitHub using Mermaid.js)
@@ -73,20 +79,3 @@ def login(username, password):
 ---------------------
 
 ❌ CRITICAL VULNERABILITY FOUND. FAILING THE BUILD.
-
-
-🛣️ Roadmap
-
-[x] Local CLI File Ingestion
-
-[x] JSON Schema Enforcement & Severity Parsing
-
-[x] Build Breaker / Exit Codes
-
-[ ] Integration with GitHub Actions for automated PR comments
-
-[ ] Repository-wide context scanning using RAG
-
-🤝 Contributing
-
-Contributions, issues, and feature requests are welcome! Feel free to check the issues page.
