@@ -1,81 +1,55 @@
-AgenticSec: AI-Driven DevSecOps Pipeline 🛡️🤖
+🛡️ AgenticSec: AI-Driven Code Reviewer
 
-AgenticSec is a localized, AI-powered pre-commit gate that shifts security to the absolute left of the software development lifecycle (SDLC).
+🌟 Highlights
 
-Instead of waiting for cloud-based SAST tools to flag vulnerabilities during the CI/CD deployment phase, this tool uses the Google Gemini API to analyze source code locally. It not only identifies OWASP vulnerabilities but acts as an automated security engineer by generating secure, drop-in replacement code and breaking the build (sys.exit(1)) if critical flaws are detected.
+Fully Localized: Runs directly on your machine as a Command Line Interface (CLI) tool.
 
-⚡ Core Features
+Agentic Auto-Remediation: Doesn't just complain about bugs; it writes the secure code patch to fix them.
 
-Dynamic File Ingestion: Point the CLI at any local Python script to scan it instantly.
+Build-Breaker Gate: Automatically halts pipelines (Exit 1) on High or Critical vulnerabilities to protect your main branch.
 
-Build-Breaker Gate: Parses structured JSON from the LLM. If a vulnerability is classified as High or Critical, the script terminates with a non-zero exit code, physically preventing vulnerable code from progressing.
+Lightweight: No heavy infrastructure or containers, just Python and the Gemini API.
 
-Agentic Auto-Remediation: Reduces developer friction by generating context-aware, secure code patches directly in the terminal output.
+ℹ️ Overview
 
-🧠 Architecture Flow
+AgenticSec is a fast, AI-powered security scanner designed to shift DevSecOps to the absolute left. Instead of waiting for a static vulnerability scan in the cloud, this tool acts as a senior AppSec engineer living right inside your terminal.
 
-flowchart TD
-    A["Target Python Script"] --> B["Local CLI Ingestion (argparse)"]
-    B --> C["Gemini API (google-genai)"]
-    C --> D["Structured JSON Analysis"]
-    
-    D --> E{"Severity Assessment"}
-    
-    E -->|"Severity: Low / Medium"| F["Report Warnings & Exit 0"]
-    E -->|"Severity: High / Critical"| G["Trigger Build Breaker (Exit 1)"]
-    
-    G --> H["Output Remediation Code Patch"]
-    F --> I["Pipeline Passes"]
+By analyzing local code files using Google's Gemini LLM, it catches Open Worldwide Application Security Project (OWASP) Top 10 vulnerabilities (like SQL injections and logic flaws) before they are even committed. It is designed to be frictionless for developers: if it breaks your build, it immediately hands you the exact code snippet needed to fix it.
 
+✍️ Author
 
-(Note: The above diagram renders natively in GitHub using Mermaid.js)
+I'm Pawan Murali, and I created this project to demonstrate how generative AI can be integrated into traditional CI/CD pipelines to dramatically accelerate developer velocity while enforcing strict security postures.
 
-🛠️ Prerequisites & Installation
+⬇️ Installation
 
-Python 3.9+ is required.
+This tool requires Python 3.9+ and is completely cross-platform.
 
-Clone this repository:
+Install the required Google GenAI SDK:
+pip install google-generativeai
 
-git clone https://github.com/yourusername/AgenticSec.git
-cd AgenticSec
-
-
-Install the required dependencies:
-
-pip install google-genai
-
-
-Obtain a free Gemini API Key from Google AI Studio and export it to your environment:
-
-# For Linux/macOS
+Set your free Gemini API key as an environment variable:
+# For macOS/Linux
 export GEMINI_API_KEY="your_api_key_here"
-
 # For Windows (PowerShell)
 $env:GEMINI_API_KEY="your_api_key_here"
 
 
 🚀 Usage
-
-Run the scanner by passing a target file as an argument.
-
-python agentic_reviewer.py <path_to_file.py>
+Point the script at any vulnerable Python file on your machine to scan it and generate secure remediation code.
+python agentic_reviewer.py target_file.py
 
 
-Example: Catching a SQL Injection
+🏗️ Architecture
 
-If you run the scanner against a file containing a raw f-string SQL query, the build will break and output the following:
+Curious how it works under the hood? Here is the data flow:
 
-$ python agentic_reviewer.py src/bad_login.py
-
-Scanning src/bad_login.py for vulnerabilities...
-
-[Critical] SQL Injection on line 14: Unsanitized user input concatenated directly into SQL query string.
-
---- SUGGESTED FIX ---
-def login(username, password):
-    # Use parameterized queries to prevent SQL injection
-    query = "SELECT * FROM users WHERE username = ? AND password = ?"
-    execute_db(query, (username, password))
----------------------
-
-❌ CRITICAL VULNERABILITY FOUND. FAILING THE BUILD.
+flowchart TD
+    
+    A["Target Python Script"] --> B["Local CLI Ingestion (argparse)"]
+    B --> C["Gemini API (google-genai)"]
+    C --> D["Structured JSON Analysis"]
+    D --> E{"Severity Assessment"}
+    E -->|"Severity: Low / Medium"| F["Report Warnings & Exit 0"]
+    E -->|"Severity: High / Critical"| G["Trigger Build Breaker (Exit 1)"]
+    G --> H["Output Remediation Code Patch"]
+    F --> I["Pipeline Passes"]
